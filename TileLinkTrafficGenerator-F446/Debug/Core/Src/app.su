@@ -1,0 +1,6 @@
+../Core/Src/app.c:30:9:APP_getUsrButton	8	static
+../Core/Src/app.c:34:6:APP_setLED	16	static
+../Core/Src/app.c:38:6:TL_Clock	8	static
+../Core/Src/app.c:46:6:TL_Transmit	192	static
+../Core/Src/app.c:114:6:APP_init	16	static
+../Core/Src/app.c:123:6:APP_main	8	static
