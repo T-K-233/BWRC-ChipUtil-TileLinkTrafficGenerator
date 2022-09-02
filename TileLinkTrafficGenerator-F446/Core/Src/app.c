@@ -44,16 +44,16 @@ extern UART_HandleTypeDef huart2;
 
 
 typedef struct {
-  uint64_t chanid;
-  uint64_t opcode;
-  uint64_t param;
-  uint64_t size;
-  uint64_t source;
-  uint64_t address;
+  uint8_t chanid;
+  uint8_t opcode;
+  uint8_t param;
+  uint8_t size;
+  uint8_t source;
+  uint32_t address;
   uint64_t data;
-  uint64_t corrupt;
-  uint64_t mask;
-  uint64_t last;
+  uint8_t corrupt;
+  uint8_t mask;
+  uint8_t last;
 } TileLinkFrame;
 
 
@@ -369,7 +369,7 @@ void APP_main() {
       tx_frame.param   = 0;
       tx_frame.size    = 2;
       tx_frame.source  = 0;
-      tx_frame.address = 0x80000000;
+      tx_frame.address = 0x80000000;//0x54000008; //0x80000000;
       tx_frame.data    = 0x0000000000000001;
       tx_frame.corrupt = 0;
       tx_frame.mask    = 0b00001111;
@@ -385,7 +385,7 @@ void APP_main() {
       tx_frame.param   = 0;
       tx_frame.size    = 2;
       tx_frame.source  = 0;
-      tx_frame.address = 0x80000000;
+      tx_frame.address = 0x80000000;//0x54000008;//;
       tx_frame.data    = 0x0000000000000001;
       tx_frame.corrupt = 0;
       tx_frame.mask    = 0b00001111;
@@ -400,7 +400,7 @@ void APP_main() {
   if (rx_finished) {
     char str[128];
 
-    sprintf(str, "[RX] chanid: %d opcode: %d size: %d address: %x data: %x\r\n", rx_frame.chanid, rx_frame.opcode, rx_frame.size, rx_frame.address, rx_frame.data);
+    sprintf(str, "[RX] chanid: %d opcode: %d size: %d address: %hu data: %hu\r\n", rx_frame.chanid, rx_frame.opcode, rx_frame.size, rx_frame.address, rx_frame.data);
     HAL_UART_Transmit(&huart2, (uint8_t *)str, strlen(str), 1000);
     rx_finished = 0;
   }
