@@ -29,7 +29,7 @@
 | PutPartialData  | Ch. A   | 0x1    | 0x0   | Slave responses AccessAck      |
 | Get             | Ch. A   | 0x4    | 0x0   | Slave responses AccessAckData  |
 | AccessAck       | Ch. D   | 0x0    | 0x0   |                                |
-| AccessAck       | Ch. D   | 0x1    | 0x0   |                                |
+| AccessAckData   | Ch. D   | 0x1    | 0x0   |                                |
 
 
 ### Example Frames
