@@ -1,4 +1,4 @@
-Core/Src/app.o: ../Core/Src/app.c ../Core/Inc/app.h \
+Core/Src/tilelink.o: ../Core/Src/tilelink.c ../Core/Inc/tilelink.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -28,7 +28,7 @@ Core/Src/app.o: ../Core/Src/app.c ../Core/Inc/app.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
  ../Core/Inc/main.h ../Core/Inc/app.h ../Core/Inc/tilelink.h
-../Core/Inc/app.h:
+../Core/Inc/tilelink.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h:
