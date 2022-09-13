@@ -48,17 +48,17 @@ void TL_serialize(TileLinkFrame *frame) {
   for (uint16_t i=0; i<TL_SERDES_LAST_SIZE; i+=1) {
     frame->buffer[i] = (frame->last >> i) & 0b1;
   }
+  for (uint16_t i=0; i<TL_SERDES_MASK_SIZE; i+=1) {
+    frame->buffer[i+TL_SERDES_LAST_OFFSET] = (frame->mask >> i) & 0b1;
+  }
   for (uint16_t i=0; i<TL_SERDES_CORRUPT_SIZE; i+=1) {
-    frame->buffer[i+TL_SERDES_LAST_OFFSET] = (frame->corrupt >> i) & 0b1;
+    frame->buffer[i+TL_SERDES_MASK_OFFSET] = (frame->corrupt >> i) & 0b1;
   }
   for (uint16_t i=0; i<TL_SERDES_DATA_SIZE; i+=1) {
     frame->buffer[i+TL_SERDES_CORRUPT_OFFSET] = (frame->data >> i) & 0b1;
   }
-  for (uint16_t i=0; i<TL_SERDES_MASK_SIZE; i+=1) {
-    frame->buffer[i+TL_SERDES_DATA_OFFSET] = (frame->mask >> i) & 0b1;
-  }
   for (uint16_t i=0; i<TL_SERDES_ADDRESS_SIZE; i+=1) {
-    frame->buffer[i+TL_SERDES_MASK_OFFSET] = (frame->address >> i) & 0b1;
+    frame->buffer[i+TL_SERDES_DATA_OFFSET] = (frame->address >> i) & 0b1;
   }
   for (uint16_t i=0; i<TL_SERDES_SOURCE_SIZE; i+=1) {
     frame->buffer[i+TL_SERDES_ADDRESS_OFFSET] = (frame->source >> i) & 0b1;
@@ -92,17 +92,17 @@ void TL_deserialize(TileLinkFrame *frame) {
   for (uint16_t i=0; i<TL_SERDES_LAST_SIZE; i+=1) {
     frame->last |= ((frame->buffer[i] & 0b1) << i);
   }
+  for (uint16_t i=0; i<TL_SERDES_MASK_SIZE; i+=1) {
+    frame->mask |= ((frame->buffer[i+TL_SERDES_LAST_OFFSET] & 0b1) << i);
+  }
   for (uint16_t i=0; i<TL_SERDES_CORRUPT_SIZE; i+=1) {
-    frame->corrupt |= ((frame->buffer[i+TL_SERDES_LAST_OFFSET] & 0b1) << i);
+    frame->corrupt |= ((frame->buffer[i+TL_SERDES_MASK_OFFSET] & 0b1) << i);
   }
   for (uint16_t i=0; i<TL_SERDES_DATA_SIZE; i+=1) {
     frame->data |= ((frame->buffer[i+TL_SERDES_CORRUPT_OFFSET] & 0b1) << i);
   }
-  for (uint16_t i=0; i<TL_SERDES_MASK_SIZE; i+=1) {
-    frame->mask |= ((frame->buffer[i+TL_SERDES_DATA_OFFSET] & 0b1) << i);
-  }
   for (uint16_t i=0; i<TL_SERDES_ADDRESS_SIZE; i+=1) {
-    frame->address |= ((frame->buffer[i+TL_SERDES_MASK_OFFSET] & 0b1) << i);
+    frame->address |= ((frame->buffer[i+TL_SERDES_DATA_OFFSET] & 0b1) << i);
   }
   for (uint16_t i=0; i<TL_SERDES_SOURCE_SIZE; i+=1) {
     frame->source |= ((frame->buffer[i+TL_SERDES_ADDRESS_OFFSET] & 0b1) << i);
