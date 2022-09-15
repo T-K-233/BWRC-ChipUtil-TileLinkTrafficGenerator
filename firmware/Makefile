@@ -1,24 +1,35 @@
 
 TARGET ?= firmware
 
+#################################
+# RISCV Toolchain
+#################################
 
-#################################
-# RISCV SiFive Toolchain
-#################################
-CC = riscv64-unknown-elf-gcc
-CXX = riscv64-unknown-elf-g++
-CP = riscv64-unknown-elf-objcopy
-OD = riscv64-unknown-elf-objdump
-DG = riscv64-unknown-elf-gdb
-SIZE = riscv64-unknown-elf-size
+# SiFive Toolchain
+#PREFIX = riscv64-unknown-elf-
+
+# Nuclei Toolchain
+#PREFIX = riscv-nuclei-elf-
+
+# xPack Toolchain
+PREFIX = riscv-none-elf-
+
+
+CC = $(PREFIX)gcc
+CXX = $(PREFIX)g++
+CP = $(PREFIX)objcopy
+OD = $(PREFIX)objdump
+DG = $(PREFIX)gdb
+SIZE = $(PREFIX)size
 
 
 #################################
 # Working directories
 #################################
 VENDOR_ROOT = bsp/
-SRC_DIR = core/src/
-INC_DIR = core/inc/
+USR_DIR = core/
+SRC_DIR = $(USR_DIR)src/
+INC_DIR = $(USR_DIR)inc/
 BUILD_DIR = build/
 
 
@@ -28,7 +39,13 @@ BUILD_DIR = build/
 A_SOURCES  = $(wildcard $(SRC_DIR)*.S) $(wildcard $(SRC_DIR)*/*.S)
 
 C_SOURCES  = $(wildcard $(SRC_DIR)*.c) $(wildcard $(SRC_DIR)*/*.c)
+
+A_SOURCES += $(USR_DIR)startup/startup.S
+
 C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal.c
+C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_gpio.c
+C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_rcc.c
+C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_time.c
 C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_uart.c
 
 INCLUDES  = -I$(INC_DIR)
@@ -58,8 +75,8 @@ TARGET_VERILOG = $(BUILD_DIR)$(TARGET).out
 #################################
 
 # MCU Settings
-ARCH = rv32i
-ABI = ilp32
+ARCH = rv32imaf_zicsr
+ABI = ilp32f
 CODEMODEL = medany
 LD_SCRIPT = $(SRC_DIR)oscibear.ld
 
@@ -76,6 +93,7 @@ CFLAGS += $(INCLUDES)
 # linker Flags
 LFLAGS  = -static
 LFLAGS += -nostartfiles -nostdlib
+#LFLAGS += -nostartfiles
 LFLAGS += -T $(LD_SCRIPT)
 
 

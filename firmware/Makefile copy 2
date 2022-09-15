@@ -1,0 +1,154 @@
+# Path you your toolchain installation, leave empty if already in system PATH
+TOOLCHAIN_ROOT =
+
+# Path to the MCU codebase
+VENDOR_ROOT = bsp/
+
+###############################################################################
+
+		# ROOT		 = .
+		# SRC_DIR		 = $(ROOT)
+		# CMSIS_DIR	 = $(BREEZY_DIR)/lib/CMSIS
+		# STDPERIPH_DIR	 = $(BREEZY_DIR)/lib/STM32F10x_StdPeriph_Driver
+		# OBJECT_DIR	 = $(ROOT)/obj
+		# BIN_DIR		 = $(ROOT)/obj
+
+
+# Project specific
+TARGET = firmware
+SRC_DIR = core/src/
+INC_DIR = core/inc/
+LIB_SRC_DIR = lib/src/
+LIB_INC_DIR = lib/inc/
+BUILD_DIR = build/
+
+# Toolchain
+CC = riscv64-unknown-elf-gcc
+CXX = riscv64-unknown-elf-g++
+CP = riscv64-unknown-elf-objcopy
+OD = riscv64-unknown-elf-objdump
+DG = riscv64-unknown-elf-gdb
+SIZE = riscv64-unknown-elf-size
+
+# MCU Settings
+#ARCH = rv32imac    rv32imafc
+ARCH = rv32i
+ABI = ilp32
+CODEMODEL = medany
+LD_SCRIPT = $(SRC_DIR)/oscibear.ld
+
+ARCHFLAGS = -march=$(ARCH) -mabi=$(ABI) -mcmodel=$(CODEMODEL) -fno-pie
+SPECFLAGS = --specs="nano.specs"
+
+# Compiler Flags
+CFLAGS  = -g -std=gnu11 -O0 -Wall -Wextra -Warray-bounds -Wno-unused-parameter
+CFLAGS += -fno-common -fno-builtin-printf
+CFLAGS += $(ARCHFLAGS)
+CFLAGS += $(SPECFLAGS)
+CFLAGS += $(INCLUDES)
+
+# Linker Flags
+LFLAGS  = -static
+LFLAGS += -nostartfiles -nostdlib
+LFLAGS += -T $(LD_SCRIPT)
+
+# Project sources
+SRC_FILES  = $(wildcard $(SRC_DIR)*.c) $(wildcard $(SRC_DIR)*/*.c)
+ASM_FILES  = $(wildcard $(SRC_DIR)*.s) $(wildcard $(SRC_DIR)*/*.s)
+
+# Project includes
+INCLUDES   = -I$(INC_DIR)
+INCLUDES  += -I$(INC_DIR)hal/
+
+# Library includes
+SRC_FILES += $(wildcard $(LIB_SRC_DIR)*.c) $(wildcard $(LIB_SRC_DIR)*/*.c)
+INCLUDES  += -I$(LIB_INC_DIR)
+
+# Vendor sources: Note that files in "Templates" are normally copied into project for customization,
+# but that is not necessary for this simple project.
+# ASM_FILES += $(VENDOR_ROOT)Drivers/CMSIS/Device/ST/STM32F7xx/Source/Templates/gcc/startup_stm32f767xx.s
+# SRC_FILES += $(VENDOR_ROOT)Drivers/CMSIS/Device/ST/STM32F7xx/Source/Templates/system_stm32f7xx.c
+SRC_FILES += $(VENDOR_ROOT)oscibear/src/oscibear_hal.c
+SRC_FILES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_uart.c
+# SRC_FILES += $(VENDOR_ROOT)Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.c
+# SRC_FILES += $(VENDOR_ROOT)Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_dma.c
+# SRC_FILES += $(VENDOR_ROOT)Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_exti.c
+# SRC_FILES += $(VENDOR_ROOT)Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_flash.c
+# SRC_FILES += $(VENDOR_ROOT)Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.c
+# SRC_FILES += $(VENDOR_ROOT)Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr.c
+# SRC_FILES += $(VENDOR_ROOT)Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.c
+# SRC_FILES += $(VENDOR_ROOT)Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.c
+# SRC_FILES += $(VENDOR_ROOT)Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.c
+# SRC_FILES += $(VENDOR_ROOT)Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.c
+
+
+# Vendor includes
+INCLUDES += -I$(VENDOR_ROOT)oscibear/inc
+INCLUDES += -I$(VENDOR_ROOT)Drivers/CMSIS/Device/ST/STM32F7xx/Include
+INCLUDES += -I$(VENDOR_ROOT)Drivers/STM32F7xx_HAL_Driver/Inc
+INCLUDES += -I$(VENDOR_ROOT)Drivers/BSP/STM32F7xx_Nucleo_144
+
+
+###############################################################################
+
+#CXX_OBJS = $(SRC_FILES:.c=.o)
+ASM_OBJS = $(ASM_FILES:.s=.o)
+ALL_OBJS = $(ASM_OBJS) $(CXX_OBJS)
+
+CXX_FILES = $(SRC_FILES:.c=.o)
+
+CXX_OBJS=$(addsuffix .o,$(addprefix $(BUILD_DIR),$(basename $(CXX_FILES))))
+
+#CXX_OBJS=$(addsuffix .o,$(addprefix $(BUILD_DIR)/$(TARGET),$(basename $(SRC_FILES))))
+#ALL_OBJS = $(CXX_OBJS)
+
+#################################
+# Target Output Files
+#################################
+TARGET_ELF=$(BUILD_DIR)$(TARGET).elf
+TARGET_HEX=$(BUILD_DIR)$(TARGET).hex
+
+all: $(TARGET_ELF)
+
+test:
+	@echo "[CC] $(BUILD_DIR)$@"
+	@echo "$(CXX_OBJS)"
+	@echo "$(CXX_FILES)"
+
+
+# Compile
+$(CXX_OBJS): $(BUILD_DIR)%.o: %.c
+$(ASM_OBJS): %.o: %.s
+	@echo $(@D)
+	@echo "[CC] $(BUILD_DIR)$@"
+	@echo "$(CXX_OBJS)"
+	@echo "$(ALL_OBJS)"
+	@echo $(@D)
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -c $(BUILD_DIR)$< -o $@
+
+# Link
+$(TARGET_ELF): $(CXX_OBJS)
+	@echo "[LD] $@"
+	@echo "$(CXX_OBJS)"
+	@echo "$(ALL_OBJS)"
+	@$(CC) $(CFLAGS) $(LFLAGS) $^ -o $@
+	$(SIZE) $(TARGET_ELF)
+# %.elf: $(ALL_OBJS)
+
+$(TARGET_HEX): $(TARGET_ELF)
+	$(CP) -O ihex --set-start 0x8000000 $< $@
+
+# Clean
+clean:
+	@rm -f $(ALL_OBJS) $(TARGET)
+
+# Debug
+gdb-server_rvlink:
+	rv-util
+
+gdb-server_openocd:
+	openocd -f ./openocd.cfg
+
+gdb-client: $(TARGET)
+	$(DB) -tui $(TARGET)

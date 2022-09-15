@@ -1,0 +1,6 @@
+../Core/Src/app.c:37:6:HAL_TIM_IC_CaptureCallback	16	static
+../Core/Src/app.c:50:6:HAL_UARTEx_RxEventCallback	16	static
+../Core/Src/app.c:71:9:APP_getUsrButton	8	static
+../Core/Src/app.c:75:6:APP_setLED	16	static
+../Core/Src/app.c:79:6:APP_init	8	static
+../Core/Src/app.c:87:6:APP_main	8	static
