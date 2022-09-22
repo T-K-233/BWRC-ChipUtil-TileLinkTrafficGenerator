@@ -1,14 +1,17 @@
-
-#if __riscv_xlen == 64
-  #define LREG ld
-  #define SREG sd
-  #define REGBYTES 8
-#else
+#include "encoding.h"
+/*
+# if __riscv_xlen == 64
+#   define LREG ld
+#   define SREG sd
+#   define REGBYTES 8
+# else
+*/
   #define LREG lw
   #define SREG sw
   #define REGBYTES 4
+  /*
 #endif
-
+*/
 .section .text.init
 .globl _start
 _start:
@@ -44,8 +47,7 @@ _start:
   li x30, 0
   li x31, 0
 
-  la t0, trap_handler
-  li t0, 0x80000000
+  la t0, trap_entry
   csrw mtvec, t0
 
 .option push
@@ -53,10 +55,15 @@ _start:
   la gp, __global_pointer$
 .option pop
   
+  li tp, 0x80004500
+
   li sp, 0x80004000
 
   csrr a0, mhartid
   li a1, 1
+
+    # enable interrupt
+    csrsi mstatus, 0b1000
 
   call system_init
   call main
@@ -64,7 +71,11 @@ _start:
 infinite_loop:
   j infinite_loop
 
-trap_handler:
+.align 4
+trap_entry:
+    # disable interrupt
+    csrci mstatus, 0b1000
+
   addi sp, sp, -32*REGBYTES
 
   SREG x1, 1*REGBYTES(sp)
@@ -99,10 +110,14 @@ trap_handler:
   SREG x30, 30*REGBYTES(sp)
   SREG x31, 31*REGBYTES(sp)
 
-  csrr a0, mcause
-  csrr a1, mepc
-  mv a2, sp
-  call interrupt_handler
+  call trap_handler
+  # li t0, 0x10012000
+  # li t1, 1
+  # sw t1, 0x0C(t0)
+
+  # # Remain in M-mode after eret
+  #li t0, MSTATUS_MPP
+  #csrs mstatus, t0
   
   LREG x1, 1*REGBYTES(sp)
   LREG x2, 2*REGBYTES(sp)
@@ -137,4 +152,7 @@ trap_handler:
   LREG x31, 31*REGBYTES(sp)
 
   addi sp, sp, 32*REGBYTES
+
+    # csrr t0, mepc
+    # jr t0
   mret

@@ -8,7 +8,7 @@ extern "C" {
 
 #include "oscibear.h"
 
-#define SYS_CLK_FREQ  250000                  // Hz
+#define SYS_CLK_FREQ  200000                  // Hz
 #define MTIME_FREQ    (SYS_CLK_FREQ / 20000)     // tick per milliseconds
 
 uint64_t HAL_getTick();

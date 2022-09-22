@@ -1,0 +1,5 @@
+{
+  "files.associations": {
+    "oscibear_hal_gpio.h": "c"
+  }
+}

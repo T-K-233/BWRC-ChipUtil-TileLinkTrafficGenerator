@@ -1,9 +1,12 @@
 
+#include "oscibear_hal_time.h"
 #include "oscibear_hal_uart.h"
 
-void HAL_UART_init(UART_TypeDef *UARTx) {
+void HAL_UART_init(UART_TypeDef *UARTx, UART_InitTypeDef *UART_init) {
   SET_BITS(UARTx->RXCTRL, UART_RXCTRL_RXEN_MSK);
   SET_BITS(UARTx->TXCTRL, UART_TXCTRL_TXEN_MSK);
+
+  UARTx->DIV = (SYS_CLK_FREQ / UART_init->baudrate) - 1;
 
   // baudrate setting
   // f_baud = f_sys / (div + 1)
