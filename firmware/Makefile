@@ -43,9 +43,10 @@ C_SOURCES  = $(wildcard $(SRC_DIR)*.c) $(wildcard $(SRC_DIR)*/*.c)
 A_SOURCES += $(USR_DIR)startup/startup.S
 
 C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal.c
+C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_core.c
+C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_clint.c
 C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_gpio.c
 C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_rcc.c
-C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_time.c
 C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_uart.c
 
 INCLUDES  = -I$(INC_DIR)
@@ -92,8 +93,8 @@ CFLAGS += $(INCLUDES)
 
 # linker Flags
 LFLAGS  = -static
-LFLAGS += -nostartfiles -nostdlib
-#LFLAGS += -nostartfiles
+# LFLAGS += -nostartfiles -nostdlib
+LFLAGS += -nostartfiles
 LFLAGS += -T $(LD_SCRIPT)
 
 

@@ -1,18 +1,13 @@
 ENTRY(_start)
 
 MEMORY {
-  SRAM(rwx): ORIGIN = 0x80000000, LENGTH = 8K
+  SRAM(rwx): ORIGIN = 0x80000000, LENGTH = 10K
 }
 
 SECTIONS {
-  /*
-  .isr_vector : {
-    . = ALIGN(4);
-    KEEP(*(.isr_vector)) /* Startup code *
-    . = ALIGN(4);
-  }> SRAM
-*/
   .text : {
+    KEEP(*(text..isr_vector)) /* Startup code */
+    . = ALIGN(4);
     *(.text.init)
     *(.text)
   }> SRAM

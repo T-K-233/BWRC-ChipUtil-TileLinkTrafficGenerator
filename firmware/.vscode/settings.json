@@ -1,5 +1,12 @@
 {
   "files.associations": {
-    "oscibear_hal_gpio.h": "c"
+    "oscibear_hal_gpio.h": "c",
+    "main.h": "c",
+    "oscibear_hal_time.h": "c",
+    "oscibear_hal.h": "c",
+    "oscibear_hal_clint.h": "c",
+    "oscibear.h": "c",
+    "rv_core.h": "c",
+    "oscibear_hal_uart.h": "c"
   }
 }

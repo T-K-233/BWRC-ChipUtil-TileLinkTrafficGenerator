@@ -1,5 +1,4 @@
 
-#include "oscibear_hal_time.h"
 #include "oscibear_hal_uart.h"
 
 void HAL_UART_init(UART_TypeDef *UARTx, UART_InitTypeDef *UART_init) {

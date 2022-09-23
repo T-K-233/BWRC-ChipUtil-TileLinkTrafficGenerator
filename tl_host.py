@@ -114,9 +114,9 @@ def main():
     #time.sleep(0.02)
     #trigSoftwareInterrupt()
 
-    time.sleep(5)
+    time.sleep(3)
 
-    trigSoftwareInterrupt()
+    #trigSoftwareInterrupt()
 
 
     #while True:

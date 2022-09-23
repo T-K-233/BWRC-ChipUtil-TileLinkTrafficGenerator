@@ -12,70 +12,11 @@
   /*
 #endif
 */
-.section .text.init
-.globl _start
-_start:
-  li x1, 0
-  li x2, 0
-  li x3, 0
-  li x4, 0
-  li x5, 0
-  li x6, 0
-  li x7, 0
-  li x8, 0
-  li x9, 0
-  li x10, 0
-  li x11, 0
-  li x12, 0
-  li x13, 0
-  li x14, 0
-  li x15, 0
-  li x16, 0
-  li x17, 0
-  li x18, 0
-  li x19, 0
-  li x20, 0
-  li x21, 0
-  li x22, 0
-  li x23, 0
-  li x24, 0
-  li x25, 0
-  li x26, 0
-  li x27, 0
-  li x28, 0
-  li x29, 0
-  li x30, 0
-  li x31, 0
-
-  la t0, trap_entry
-  csrw mtvec, t0
-
-.option push
-.option norelax
-  la gp, __global_pointer$
-.option pop
-  
-  li tp, 0x80004500
-
-  li sp, 0x80004000
-
-  csrr a0, mhartid
-  li a1, 1
-
-    # enable interrupt
-    csrsi mstatus, 0b1000
-
-  call system_init
-  call main
-
-infinite_loop:
-  j infinite_loop
 
 .align 4
-trap_entry:
-    # disable interrupt
-    csrci mstatus, 0b1000
-
+.section .text.isr_vector
+.globl isr_vector
+isr_vector:
   addi sp, sp, -32*REGBYTES
 
   SREG x1, 1*REGBYTES(sp)
@@ -111,13 +52,6 @@ trap_entry:
   SREG x31, 31*REGBYTES(sp)
 
   call trap_handler
-  # li t0, 0x10012000
-  # li t1, 1
-  # sw t1, 0x0C(t0)
-
-  # # Remain in M-mode after eret
-  #li t0, MSTATUS_MPP
-  #csrs mstatus, t0
   
   LREG x1, 1*REGBYTES(sp)
   LREG x2, 2*REGBYTES(sp)
@@ -152,7 +86,61 @@ trap_entry:
   LREG x31, 31*REGBYTES(sp)
 
   addi sp, sp, 32*REGBYTES
-
-    # csrr t0, mepc
-    # jr t0
   mret
+
+.section .text.init
+.globl _start
+_start:
+  li x1, 0
+  li x2, 0
+  li x3, 0
+  li x4, 0
+  li x5, 0
+  li x6, 0
+  li x7, 0
+  li x8, 0
+  li x9, 0
+  li x10, 0
+  li x11, 0
+  li x12, 0
+  li x13, 0
+  li x14, 0
+  li x15, 0
+  li x16, 0
+  li x17, 0
+  li x18, 0
+  li x19, 0
+  li x20, 0
+  li x21, 0
+  li x22, 0
+  li x23, 0
+  li x24, 0
+  li x25, 0
+  li x26, 0
+  li x27, 0
+  li x28, 0
+  li x29, 0
+  li x30, 0
+  li x31, 0
+
+  la t0, isr_vector
+  #addi t0, t0, 1    # vectored mode
+  csrw mtvec, t0
+
+.option push
+.option norelax
+  la gp, __global_pointer$
+.option pop
+  
+  li tp, 0x80004500
+
+  li sp, 0x80004000
+
+  csrr a0, mhartid
+  li a1, 1
+
+  call system_init
+  call main
+
+infinite_loop:
+  j infinite_loop

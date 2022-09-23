@@ -7,6 +7,7 @@ extern "C" {
 #endif
 
 #include "oscibear.h"
+#include "oscibear_hal.h"
 
 typedef struct {
   uint32_t baudrate;
