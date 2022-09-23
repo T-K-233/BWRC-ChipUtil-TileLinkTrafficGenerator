@@ -27,7 +27,7 @@ void TL_update(TileLinkController *tl) {
     tl->tx_bit_offset += 1;
   }
 
-  if (tl->rx_pending) {
+  else if (tl->rx_pending) {
     if (tl->rx_finished) {
       HAL_GPIO_WritePin(TL_MISO_Ready_GPIO_Port, TL_MISO_Ready_Pin, 0);
       tl->rx_pending = 0;
