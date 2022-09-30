@@ -11,6 +11,8 @@ extern "C" {
 #include "oscibear_hal_core.h"
 #include "oscibear_hal_clint.h"
 #include "oscibear_hal_gpio.h"
+#include "oscibear_hal_plic.h"
+#include "oscibear_hal_rcc.h"
 #include "oscibear_hal_uart.h"
 
 

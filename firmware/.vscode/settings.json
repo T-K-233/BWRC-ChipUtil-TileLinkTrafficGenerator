@@ -7,6 +7,9 @@
     "oscibear_hal_clint.h": "c",
     "oscibear.h": "c",
     "rv_core.h": "c",
-    "oscibear_hal_uart.h": "c"
+    "oscibear_hal_uart.h": "c",
+    "stdint.h": "c",
+    "string.h": "c",
+    "baseband.h": "c"
   }
 }

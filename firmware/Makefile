@@ -46,6 +46,7 @@ C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal.c
 C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_core.c
 C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_clint.c
 C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_gpio.c
+C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_plic.c
 C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_rcc.c
 C_SOURCES += $(VENDOR_ROOT)oscibear/src/oscibear_hal_uart.c
 
@@ -76,7 +77,7 @@ TARGET_VERILOG = $(BUILD_DIR)$(TARGET).out
 #################################
 
 # MCU Settings
-ARCH = rv32imaf_zicsr
+ARCH = rv32imafc_zicsr
 ABI = ilp32f
 CODEMODEL = medany
 LD_SCRIPT = $(SRC_DIR)oscibear.ld

@@ -81,7 +81,7 @@ def flash_prog():
 
     for addr, inst in enumerate(prog_int):
         print("{:.2f}%\t {} / {}".format((addr / n_words) * 100., addr, n_words))
-        TL_PutFullData(0x80000000+addr*4, inst)
+        TL_PutFullData(0x80000000+addr*4, inst, verbal=False)
 
     time.sleep(0.1)
 
@@ -114,7 +114,7 @@ def main():
     #time.sleep(0.02)
     #trigSoftwareInterrupt()
 
-    time.sleep(3)
+    #time.sleep(3)
 
     #trigSoftwareInterrupt()
 

@@ -132,9 +132,9 @@ _start:
   la gp, __global_pointer$
 .option pop
   
-  li tp, 0x80004500
+  li tp, 0x80005500
 
-  li sp, 0x80004000
+  li sp, 0x80005000
 
   csrr a0, mhartid
   li a1, 1

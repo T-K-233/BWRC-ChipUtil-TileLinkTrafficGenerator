@@ -10,6 +10,8 @@ extern "C" {
 #include <stdio.h>
 #include <string.h>
 
+#include "baseband.h"
+
 #include "oscibear_hal.h"
 
 
